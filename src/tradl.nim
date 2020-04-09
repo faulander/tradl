@@ -7,7 +7,7 @@ import logging
 import tables
 
 # GLOBAL VARIABLES
-const homeDir = getHomeDir()
+let homeDir = getHomeDir()
 var books: seq[string] 
 var filename, title, downloadURL: string
 var possible_downloads: seq[Table[string, string]] = @[]

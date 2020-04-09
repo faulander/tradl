@@ -6,16 +6,6 @@ Standalone CLI downloader for the Imperial Library of Trantor written in Nim.
 Grab a copy of trandl from [Releases](https://github.com/faulander/tradl/releases) and unzip it to a directory of your choice.
 Open a command prompt in this directory and type "trandl.exe -h".
 
-### Prerequisites
-
-If you are on Windows and get an error about missing DLL, please download OpenSSL for Windows from this resource:
-https://slproweb.com/download/Win64OpenSSL-1_1_1f.exe
-
-If you are using chocolatey, you can run 
-```
-choco install openssl
-```
-
 ## Usage
 ```
 -h shows the help page
