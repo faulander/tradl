@@ -1,0 +1,13 @@
+{
+    "taskName": "Run tradl.nim",
+    "command": "nim",
+    "args": ["c", "-d:ssl", "tradl.nim"],
+    "options": {
+        "cwd": "${workspaceRoot}/src"
+    },
+    "type": "shell",
+    "group": {
+        "kind": "build",
+        "isDefault": true
+    }
+}

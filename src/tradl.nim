@@ -5,6 +5,7 @@ import rss
 import argparse
 import logging
 import tables
+import terminal
 
 # GLOBAL VARIABLES
 let homeDir = getHomeDir()
@@ -28,7 +29,7 @@ for line in downloads.lines:
 
 # LOGGING
 #var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
-var fileLog = newFileLogger(joinPath(homedir, ".tradl", "errors.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
+var fileLog = newFileLogger(joinPath(homedir, ".tradl", "error.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
 var rollingLog = newRollingFileLogger(joinPath(homedir, ".tradl", "rolling.log"), maxLines=500, fmtStr="[$datetime] - $levelname - ")
 #addHandler(logger)
 addHandler(fileLog)
