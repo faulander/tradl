@@ -1,6 +1,6 @@
 # Package
 
-version       = "0.2.0"
+version       = "0.2.1"
 author        = "MrKoops"
 description   = "CLI downloader for Imperial Library of Trantor"
 license       = "MIT"

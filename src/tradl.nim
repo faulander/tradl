@@ -14,10 +14,10 @@ var possible_downloads: seq[Table[string, string]] = @[]
 var feed: RSS
 
 # LOGGING
-var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
+#var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
 var fileLog = newFileLogger(joinPath(homedir, ".tradl", "errors.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
 var rollingLog = newRollingFileLogger(joinPath(homedir, ".tradl", "rolling.log"), maxLines=500, fmtStr="[$datetime] - $levelname - ")
-addHandler(logger)
+#addHandler(logger)
 addHandler(fileLog)
 addHandler(rollingLog)
 
@@ -41,7 +41,7 @@ var p = newParser("tradl"):
 var opts = p.parse()
 
 proc dl(url: string): bool =
-  log(lvlInfo, "Downloading '" & filename & "'.")
+  echo "Downloading '" & filename & "'."
   try:
     # echo item.enclosure.url
     var client = newHttpClient()
@@ -55,18 +55,18 @@ proc dl(url: string): bool =
   except HttpRequestError:
     log(lvlError,"Error downloading " & title)
     return false
-  log(lvlInfo, "Downloaded '" & filename & "'.")
+  echo "Downloaded '" & filename & "'."
   return true
 
 if opts.help == false and opts.search == "":
   if opts.language == "":
-    info("No language parameter provided, using 'en'.")
+    echo "No language parameter provided, using 'en'."
     opts.language = "en"
   if opts.amount == "":
-    info("No amount parameter provided, using default of 20.")
+    echo "No amount parameter provided, using default of 20."
     opts.amount = "20"
   if opts.dir == "":
-    info("No save directory provided, using current directory.")
+    echo "No save directory provided, using current directory."
     opts.dir = getCurrentDir()
   let baseUrl = "https://trantor.is/search/?num=" & opts.amount & "&amp;q=lang%3A" & opts.language & "&amp;fmt=rss"
   var tmpRSSClient = newHttpClient()
@@ -90,14 +90,14 @@ if opts.help == false and opts.search == "":
 if opts.search != "":
   var searchstring = replace(opts.search, " ", "+")
   if opts.language == "":
-    log(lvlWarn, "No language parameter provided, using 'en'.")
+    echo "No language parameter provided, using 'en'."
     opts.language = "en"
   if opts.dir == "":
-    info("No save directory provided, using current directory.")
+    echo "No save directory provided, using current directory."
     opts.dir = getCurrentDir()
 
-  log(lvlInfo, "If your wanted book isn't displayed, be more specific in your searchterm.")
-  log(lvlInfo, "Searching for '", opts.search, "'")
+  echo "If your wanted book isn't displayed, be more specific in your searchterm."
+  echo "Searching for '", opts.search, "'"
   var baseURL = "https://trantor.is/search/?q=lang%3A" & opts.language & "+'" & searchstring & "'&fmt=rss&num=10"
   #log(lvlInfo, baseURL)
   echo "Results:"
