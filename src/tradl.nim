@@ -13,6 +13,19 @@ var filename, title, downloadURL: string
 var possible_downloads: seq[Table[string, string]] = @[]
 var feed: RSS
 
+
+# SETTINGS
+discard existsOrCreateDir(joinPath(homedir, ".tradl"))
+if not existsFile(joinPath(homedir, ".tradl", "downloads.txt")):
+  writeFile(joinPath(homedir, ".tradl", "downloads.txt"), "")
+if not existsFile(joinPath(homedir, ".tradl", "error.log")):
+  writeFile(joinPath(homedir, ".tradl", "error.log"), "")
+if not existsFile(joinPath(homedir, ".tradl", "rolling.log")):
+  writeFile(joinPath(homedir, ".tradl", "rolling.log"), "")
+let downloads = joinPath(homedir, ".tradl", "downloads.txt")
+for line in downloads.lines:
+  books.add(line)
+
 # LOGGING
 #var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
 var fileLog = newFileLogger(joinPath(homedir, ".tradl", "errors.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
@@ -21,13 +34,6 @@ var rollingLog = newRollingFileLogger(joinPath(homedir, ".tradl", "rolling.log")
 addHandler(fileLog)
 addHandler(rollingLog)
 
-# SETTINGS
-discard existsOrCreateDir(joinPath(homedir, ".tradl"))
-if not existsFile(joinPath(homedir, ".tradl", "downloads.txt")):
-  writeFile(joinPath(homedir, ".tradl", "downloads.txt"), "")
-let downloads = joinPath(homedir, ".tradl", "downloads.txt")
-for line in downloads.lines:
-  books.add(line)
 
 # ARGUMENT PARSING
 var p = newParser("tradl"):
@@ -86,7 +92,6 @@ if opts.help == false and opts.search == "":
     f.writeLine(book)
   f.close()
 
-#https://trantor.is/search/?q=lang%3Ade+"sandra+mohr"&fmt=rss
 if opts.search != "":
   var searchstring = replace(opts.search, " ", "+")
   if opts.language == "":
