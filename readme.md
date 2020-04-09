@@ -31,9 +31,9 @@ trandl.exe -a=100 -d="home/user/test/Downloads" -l=en
 ```
 Downloads the last 100 uploads in english to the specified directory.
 ```
-trandl.exe -l=en -s="the hunger games"
+trandl.exe -l=en -s="shakespeare william"
 ```
-Searches for the hunger games books in english.
+Searches for books from William Shakespeare in english.
 
 ```
 trandl.exe 
