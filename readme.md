@@ -11,7 +11,10 @@ Cope trandl.exe to a directory of your choice, open a command prompt and type "t
 If you are on Windows and get an error about missing DLL, please download OpenSSL for Windows from this resource:
 https://slproweb.com/download/Win64OpenSSL-1_1_1f.exe
 
-If you are using chocolatey, you can run choco install openssl
+If you are using chocolatey, you can run 
+```
+choco install openssl
+```
 
 ## Usage
 ```
@@ -39,17 +42,15 @@ Downloads the last 20 uploaded books in english to the current folder.
 
 ## Logging
 On Windows logfiles are located in:
-c:\users\<username>\.trandl
+```
+c:\users\username\.trandl
+```
 
 On Linux logfiles are located in:
-/home/<username>/.trandl
+```
+/home/username/.trandl
+```
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
-
-## Acknowledgments
-
-* Hat tip to anyone whose code was used
-* Inspiration
-* etc
