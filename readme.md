@@ -4,7 +4,7 @@ Standalone CLI downloader for the Imperial Library of Trantor written in Nim.
 
 ## Getting Started
 
-Cope trandl.exe to a directory of your choice, open a command prompt and type "trandl.exe -h".
+Cope trandl.exe from src directory to a directory of your choice, open a command prompt and type "trandl.exe -h".
 
 ### Prerequisites
 
