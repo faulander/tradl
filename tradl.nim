@@ -5,6 +5,7 @@ import rss
 import argparse
 import logging
 import tables
+import terminal
 
 # GLOBAL VARIABLES
 let homeDir = getHomeDir()
@@ -28,7 +29,7 @@ for line in downloads.lines:
 
 # LOGGING
 #var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
-var fileLog = newFileLogger(joinPath(homedir, ".tradl", "errors.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
+var fileLog = newFileLogger(joinPath(homedir, ".tradl", "error.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
 var rollingLog = newRollingFileLogger(joinPath(homedir, ".tradl", "rolling.log"), maxLines=500, fmtStr="[$datetime] - $levelname - ")
 #addHandler(logger)
 addHandler(fileLog)
@@ -81,7 +82,7 @@ if opts.help == false and opts.search == "":
   var feed = parseRSS(tmpRSS)
   for item in feed.items:
     if item.enclosure.url notin books:
-      title = item.title
+      title = item.author & " - " & item.title
       filename = title & ".epub"
       filename = multiReplace(filename, [("?", ""), (":", ""), ("*", ""), ("<", ""), (">", ""), ("|", ""), ("^", "")])
       downloadURL = item.enclosure.url
@@ -95,35 +96,45 @@ if opts.help == false and opts.search == "":
 if opts.search != "":
   var searchstring = replace(opts.search, " ", "+")
   if opts.language == "":
-    echo "No language parameter provided, using 'en'."
+    writeStyled("No language parameter provided, using ", style = {styleDim})
+    writeStyled("en.", style = {styleDim, styleItalic})
     opts.language = "en"
   if opts.dir == "":
-    echo "No save directory provided, using current directory."
+    writeStyled("\nNo save directory provided, using current directory.", style = {styleDim})
     opts.dir = getCurrentDir()
 
-  echo "If your wanted book isn't displayed, be more specific in your searchterm."
-  echo "Searching for '", opts.search, "'"
+  writeStyled("\nIf your wanted book isn't displayed, be more specific in your searchterm.", style = {styleDim})
+  stdout.write("\nSearching for ")
+  setForegroundColor(fgWhite)
+  writeStyled opts.search 
   var baseURL = "https://trantor.is/search/?q=lang%3A" & opts.language & "+'" & searchstring & "'&fmt=rss&num=10"
+  setForegroundColor(fgRed)
   #log(lvlInfo, baseURL)
-  echo "Results:"
   try:
     var tmpRSSClient = newHttpClient()
     var tmpRSS = tmpRSSClient.getContent(baseUrl)
     tmpRSS = replace(tmpRSS, "&", "&amp;")
     var feed = parseRSS(tmpRSS)
+    if feed.items.len == 0:
+      writeStyled "\n\nNo Results\n" 
+    else:
+      writeStyled "\n\nResults:\n" 
+    resetAttributes()
     for item in feed.items:
       if item.enclosure.url notin books:
-        title = item.title
+        title = item.author & " - " & item.title
         filename = title & ".epub"
         filename = multiReplace(filename, [("?", ""), (":", ""), ("*", ""), ("<", ""), (">", ""), ("|", ""), ("^", "")])
         downloadURL = item.enclosure.url
         var Download = to_table({"url": downloadURL, "filename": filename, "title": title})
         possible_downloads.add(Download)
-        #discard dl(downloadURL)
     for i in 0 .. len(possible_downloads)-1:
-      echo i, " - ", possible_downloads[i]["title"]
+      setForegroundColor(fgYellow)
+      writeStyled intToStr(i)
+      resetAttributes() 
+      stdout.writeLine " - ", possible_downloads[i]["title"]
     if (len(possible_downloads)-1) > 0:
-      write(stdout, "Which book do you want to download ", "(0-", len(possible_downloads)-1,  ") -> ")
+      write(stdout, "\nWhich book do you want to download ", "(0-", len(possible_downloads)-1,  ") -> ")
       var input = readLine(stdin)
       var choice = possible_downloads[parseInt(input)]
       filename = choice["filename"]

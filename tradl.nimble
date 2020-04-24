@@ -1,13 +1,11 @@
 # Package
 
-version       = "0.2.1"
+version       = "0.2.3"
 author        = "MrKoops"
 description   = "CLI downloader for Imperial Library of Trantor"
 license       = "MIT"
 srcDir        = "src"
 bin           = @["tradl"]
-
-
 
 # Dependencies
 
