@@ -2,8 +2,8 @@
 
 Standalone CLI downloader for the Imperial Library of Trantor written in Nim.
 
-![Alt text](/src/res/help.png?raw=true "The help function")
-![Alt text](/src/res/searching_with_language_and_path.png?raw=true "The search function")
+![Alt text](/res/help.png?raw=true "The help function")
+![Alt text](/res/searching_with_language_and_path.png?raw=true "The search function")
 
 
 ## Getting Started

@@ -24,16 +24,17 @@ if not existsFile(joinPath(homedir, ".tradl", "error.log")):
 if not existsFile(joinPath(homedir, ".tradl", "rolling.log")):
   writeFile(joinPath(homedir, ".tradl", "rolling.log"), "")
 let downloads = joinPath(homedir, ".tradl", "downloads.txt")
+
 for line in downloads.lines:
   books.add(line)
 
 # LOGGING
-#var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
+var logger = newConsoleLogger(fmtStr="[$datetime] - $levelname - ")
 var fileLog = newFileLogger(joinPath(homedir, ".tradl", "error.log"), levelThreshold=lvlError, fmtStr="[$datetime] - $levelname - ")
 var rollingLog = newRollingFileLogger(joinPath(homedir, ".tradl", "rolling.log"), maxLines=500, fmtStr="[$datetime] - $levelname - ")
-#addHandler(logger)
 addHandler(fileLog)
 addHandler(rollingLog)
+addHandler(logger)
 
 
 # ARGUMENT PARSING
@@ -47,6 +48,16 @@ var p = newParser("tradl"):
 
 var opts = p.parse()
 
+proc writeDownloads(): bool = 
+  let f = open(joinPath(homedir, ".tradl", "downloads.txt"), fmWrite)
+  try:
+    for book in books:
+      f.writeLine(book)
+    f.close()
+    result = true
+  except:
+    result = false
+
 proc dl(url: string): bool =
   echo "Downloading '" & filename & "'."
   try:
@@ -55,14 +66,15 @@ proc dl(url: string): bool =
     var bookcontent = client.getContent(url)
     try:
       writefile(joinpath(opts.dir, filename), bookcontent)
-      books.add(url)
     except IOError:
-      log(lvlError,"Error writing file " & filename)
+      log(lvlError,"Error writing file " & joinpath(opts.dir, filename))
       return false
   except HttpRequestError:
     log(lvlError,"Error downloading " & title)
     return false
   echo "Downloaded '" & filename & "'."
+  books.add(url)
+  echo books
   return true
 
 if opts.help == false and opts.search == "":
@@ -87,11 +99,7 @@ if opts.help == false and opts.search == "":
       filename = multiReplace(filename, [("?", ""), (":", ""), ("*", ""), ("<", ""), (">", ""), ("|", ""), ("^", "")])
       downloadURL = item.enclosure.url
       discard dl(downloadURL)
-
-  let f = open(joinPath(homedir, ".tradl", "downloads.txt"), fmWrite)
-  for book in books:
-    f.writeLine(book)
-  f.close()
+  discard writeDownloads()
 
 if opts.search != "":
   var searchstring = replace(opts.search, " ", "+")
@@ -140,9 +148,6 @@ if opts.search != "":
       filename = choice["filename"]
       title = choice["title"]
       discard dl(choice["url"])
-      let f = open(joinPath(homedir, ".tradl", "downloads.txt"), fmWrite)
-      for book in books:
-        f.writeLine(book)
-      f.close()
+    discard writeDownloads()
   except:
     log(lvlFatal, "Source couldn't be parsed. Error:", getCurrentExceptionMsg())
