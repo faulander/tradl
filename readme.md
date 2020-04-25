@@ -11,6 +11,7 @@ Grab a copy of trandl from [Releases](https://github.com/faulander/tradl/release
 Open a command prompt in this directory and type "trandl.exe -h".
 
 ## Changelog
+- v0.2.4: Fixed a bug, which make trandl redownload ebooks.
 - v0.2.3: Code changed to reflect the changes done on the library.
 
 ## Usage
