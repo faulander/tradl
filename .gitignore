@@ -1,2 +1,5 @@
-src/
 binaries/
+src/
+tradl
+tradl.exe
+.vscode/
