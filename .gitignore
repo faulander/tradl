@@ -3,3 +3,4 @@ src/
 tradl
 tradl.exe
 .vscode/
+*.dll
