@@ -11,6 +11,7 @@ Grab a copy of trandl from [Releases](https://github.com/faulander/tradl/release
 Open a command prompt in this directory and type "tradl.exe -h" (on windows) or "./tradl -h" (on linux).
 
 ## Changelog
+- v0.3.1: Fixed a bug which made tradl not download some ebooks.
 - v0.3.0: Switched to SQLite as database instead of the textfiles.
 - v0.3.0: Fixed a bug which occured in search-mode when only one result returned.
 - v0.2.4: Fixed a bug which made tradl download ebooks several times.

@@ -10,6 +10,7 @@ import logging
 import tables
 import terminal
 import db_sqlite
+import uri
 
 ##################################################################################################
 # GLOBAL VARIABLES
@@ -76,9 +77,15 @@ var opts = p.parse()
 
 proc dl(db:DbConn, url: string) =
   info("Trying '" & filename & "' from '" & url & "'.")
+  # v0.3.1 - fixed a bug which prevented tradl from download some ebooks.
+  let posLastSlash = rfind(url, "/")
+  let partBeforeLastSlash = url[0 .. posLastSlash-1]
+  var partAfterLastSlash = url[posLastSlash+1 .. len(url)-1] 
+  partAfterLastSlash = encodeUrl(partAfterLastSlash)
+  let finalUrl = partBeforeLastSlash & "/" & partAfterLastSlash
   try:
     var client = newHttpClient()
-    var bookcontent = client.getContent(url)
+    var bookcontent = client.getContent(finalUrl)
     writefile(joinpath(opts.dir, filename), bookcontent)
     db.exec(sql"INSERT INTO downloads (url) VALUES (?)", url)
     info("Downloaded '" & filename & "' to '" & opts.dir & "'.")
